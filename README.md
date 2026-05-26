@@ -65,7 +65,7 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 
 ### ⚠️ Data Freshness
 
-- **Data is from 2026 Spring split** - May not include latest transfers and roster changes
+- **Data is from early 2026** - May not include latest transfers and roster changes
 - New recruits from Summer split may be missing
 
 ### Data Quality Notes
@@ -121,7 +121,7 @@ go run validate.go "modded.tfm2db"
 
 ## Data Sources
 
-- **Player/Team Data**: [Oracle's Elixir](https://oracleselixir.com/) - 2026 Spring/Summer splits
+- **Player/Team Data**: [Oracle's Elixir](https://oracleselixir.com/) - 2026 early/Spring split
 - **Team Logos**: Referenced from existing TFM2 custom logo format
 - **Base File Format**: Reverse-engineered from TFM2 v0.4.1
 
@@ -173,7 +173,7 @@ This mod is unofficial and not affiliated with Team Samoyed (TFM2 developers) or
 
 1. **Some players may have incorrect stats** - The formula is an approximation
 2. **Academy players have less accurate data** - Fewer games to analyze
-3. **Data from 2026 Spring** - Some teams (FeelsStrongMan Los Ratones) no longer exist, latest transfers not included
+3. **Data from early 2026** - Some teams (FeelsStrongMan Los Ratones) no longer exist, latest transfers not included
 4. **Some fields not editable** - Ages, potential, and some hidden stats could not be modified
 
 ## Contributing
