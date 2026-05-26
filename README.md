@@ -66,7 +66,6 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 ### ⚠️ Data Freshness
 
 - **Data is from 2026 Spring split** - May not include latest transfers and roster changes
-- Some teams that existed during Spring (like Los Ratones) may no longer exist
 - New recruits from Summer split may be missing
 
 ### Data Quality Notes
@@ -174,7 +173,7 @@ This mod is unofficial and not affiliated with Team Samoyed (TFM2 developers) or
 
 1. **Some players may have incorrect stats** - The formula is an approximation
 2. **Academy players have less accurate data** - Fewer games to analyze
-3. **Data from 2026 Spring** - Some teams (like Los Ratones) no longer exist, latest transfers not included
+3. **Data from 2026 Spring** - Some teams (FeelsStrongMan Los Ratones) no longer exist, latest transfers not included
 4. **Some fields not editable** - Ages, potential, and some hidden stats could not be modified
 
 ## Contributing
