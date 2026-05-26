@@ -2,7 +2,7 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.1-blue)
+![Version](https://img.shields.io/badge/version-v0.4.2-blue)
 ![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.1-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -13,7 +13,7 @@ This mod replaces the default TFM2 roster database with real-world data:
 - **🏆 120 Teams** - Real esports organizations from LCK, LPL, LEC, LCS, CBLOL, LLA, PCS, LJL, VCS, and more
 - **👤 1,197 Players** - Real pro players with their in-game names
 - **📊 Realistic Stats** - Player statistics derived from Oracle's Elixir competitive data
-- **🎨 Team Logos** - Custom logo references for major esports organizations
+- **🎨 Team Logos** - Embedded custom logos for major esports organizations
 
 ### Leagues Included
 
@@ -48,7 +48,7 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Team Names | ✅ Working | All 120 teams renamed |
-| Team Logos | ✅ Working | Custom logo references (requires logo pack) |
+| Team Logos | ✅ Working | Embedded custom logo assets |
 | Player Names | ✅ Working | Real IGNs for all players |
 | Player Stats | ✅ Working | Derived from Oracle's Elixir data |
 | Position Skills | ✅ Working | Based on actual roles played |
