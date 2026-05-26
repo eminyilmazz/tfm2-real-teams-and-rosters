@@ -57,10 +57,17 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 
 | Feature | Status | Reason |
 |---------|--------|--------|
-| **Player Ages** | ❌ Not Working | The database field we thought was "age" is actually a date string length marker. Modifying it corrupts the file. Player ages remain default. |
+| **Player Ages** | ❌ Not Working | Could not get this field working |
+| **Potential & Hidden Stats** | ⚠️ Partial | Some hidden fields could not be reliably modified |
 | **Coach Names** | ⚠️ Partial | Some coaches may be missing or have default names |
 | **Stadium Names** | ⚠️ Unchanged | Kept as game defaults |
 | **Transfer History** | ❌ Not Included | Would require more research |
+
+### ⚠️ Data Freshness
+
+- **Data is from 2026 Spring split** - May not include latest transfers and roster changes
+- Some teams that existed during Spring (like Los Ratones) may no longer exist
+- New recruits from Summer split may be missing
 
 ### Data Quality Notes
 
@@ -108,17 +115,10 @@ go run validate.go "modded.tfm2db"
 #### athletes.csv
 | Field | Editable | Notes |
 |-------|----------|-------|
-| name | ⚠️ Careful | Same length only |
+| name | ✅ Yes | Player name |
 | last_hit, skill_avoid, etc. | ✅ Yes | Stats (0-100 typical) |
-| potential | ✅ Yes | Hidden stat |
 | team_id | ✅ Yes | Contract field |
 | face | ✅ Yes | Portrait index |
-
-### Important Limitations
-
-⚠️ **String lengths must match**: The repack tool only allows editing strings that keep the same byte length. This is because changing string lengths would shift all subsequent offsets in the binary file, requiring a full re-serialization that this tool doesn't support.
-
-⚠️ **DO NOT edit the age field**: There is no user-accessible age field. The field previously labeled `age_raw` is actually a date string length marker - editing it will corrupt your save.
 
 ## Data Sources
 
@@ -148,7 +148,6 @@ Each athlete has 39 u64 values before their name string:
 - Index 21-31: Hidden stats
 - Index 32-36: Contract fields
 - Index 37: Face index
-- Index 38: **Date string length** (DO NOT EDIT)
 
 ## Disclaimer & Credits
 
@@ -166,7 +165,6 @@ This project was developed with significant assistance from **GitHub Copilot (Cl
 - **Python 3.12** - Initial tooling and data processing
 - **Go 1.21** - Final clean tools for community use
 - **Oracle's Elixir** - Competitive data source
-- **VS Code** - Development environment
 
 ### Legal
 
@@ -176,8 +174,8 @@ This mod is unofficial and not affiliated with Team Samoyed (TFM2 developers) or
 
 1. **Some players may have incorrect stats** - The formula is an approximation
 2. **Academy players have less accurate data** - Fewer games to analyze
-3. **Team rosters change frequently** - Data may be outdated
-4. **Age modification not possible** - Technical limitation discovered during development
+3. **Data from 2026 Spring** - Some teams (like Los Ratones) no longer exist, latest transfers not included
+4. **Some fields not editable** - Ages, potential, and some hidden stats could not be modified
 
 ## Contributing
 
