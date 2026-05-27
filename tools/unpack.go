@@ -38,7 +38,11 @@ const (
 	AthleteHiddenStartIndex   = 21 // 1 + 20 stat fields
 	AthleteContractStartIndex = 32 // 21 + 11 hidden fields
 	AthleteFaceIndex          = 37 // 32 + 5 contract fields
-	AthleteFixedU64Count      = 39 // face + date_str_len
+	AthleteDateTailIndex      = 38 // starts contract date strings or no-contract tail
+	AthleteDetectU64Count     = AthleteContractStartIndex
+	AthleteAgeDateStringCount = 4
+	AthleteAgePostDatesBytes  = (2 * 8) + (4 * 8) + (8 * 8)
+	AthleteAgeNoContractSkip  = 9
 )
 
 var (
@@ -91,13 +95,16 @@ type Team struct {
 
 // Athlete represents an athlete entry
 type Athlete struct {
-	NameOffset    int
-	Name          string
-	Stats         map[string]uint64
-	HiddenStats   map[string]uint64
-	Contract      map[string]uint64
-	Face          uint64
-	PreNameOffset int
+	ID          uint64
+	NameOffset  int
+	Name        string
+	Stats       map[string]uint64
+	HiddenStats map[string]uint64
+	Contract    map[string]uint64
+	Face        uint64
+	Age         uint32
+	AgeOffset   int
+	AfterName   int
 }
 
 func main() {
@@ -391,51 +398,107 @@ func smallU64Run(data []byte, offset, count int, maximum uint64) bool {
 	return true
 }
 
+func decodeAgeAtOffset(data []byte, offset int) (uint32, bool) {
+	if offset <= 0 || offset+4 > len(data) {
+		return 0, false
+	}
+	age := binary.LittleEndian.Uint32(data[offset:])
+	if age > 120 {
+		return 0, false
+	}
+	return age, true
+}
+
+func findAgeOffset(data []byte, afterName int) (int, uint32, bool) {
+	dateTailOffset := afterName + AthleteDateTailIndex*8
+	first, ok := readU64(data, dateTailOffset)
+	if !ok {
+		return 0, 0, false
+	}
+
+	if first == 0 {
+		ageOffset := dateTailOffset + AthleteAgeNoContractSkip*8
+		age, ok := decodeAgeAtOffset(data, ageOffset)
+		return ageOffset, age, ok
+	}
+
+	offset := dateTailOffset
+	for i := 0; i < AthleteAgeDateStringCount; i++ {
+		length, ok := readU64(data, offset)
+		if !ok || length > 64 {
+			return 0, 0, false
+		}
+		end := offset + 8 + int(length)
+		if end > len(data) || !utf8.Valid(data[offset+8:end]) {
+			return 0, 0, false
+		}
+		offset = end
+	}
+
+	ageOffset := offset + AthleteAgePostDatesBytes
+	age, ok := decodeAgeAtOffset(data, ageOffset)
+	return ageOffset, age, ok
+}
+
 func findAthletes(data []byte, strings []LPString) []Athlete {
 	var athletes []Athlete
+	seenOffsets := make(map[int]bool)
 
 	for _, s := range strings {
 		if !isPlausibleAthleteName(s.Text) {
 			continue
 		}
-		preOffset := s.Offset - AthleteFixedU64Count*8
-		if preOffset < 0 {
-			continue
-		}
-		// Check if stats look reasonable (small numbers)
-		if !smallU64Run(data, preOffset, AthleteContractStartIndex, 1000) {
+
+		idA, okA := readU64(data, s.Offset-24)
+		version, okB := readU64(data, s.Offset-16)
+		idC, okC := readU64(data, s.Offset-8)
+		if !okA || !okB || !okC || idA != idC || idA > 100000 || version > 10000 {
 			continue
 		}
 
+		afterName := s.Offset + 8 + s.Length
+		if !smallU64Run(data, afterName, AthleteDetectU64Count, 1000) {
+			continue
+		}
+		if seenOffsets[s.Offset] {
+			continue
+		}
+		seenOffsets[s.Offset] = true
+
+		ageOffset, age, _ := findAgeOffset(data, afterName)
+
 		athlete := Athlete{
-			NameOffset:    s.Offset,
-			Name:          s.Text,
-			PreNameOffset: preOffset,
-			Stats:         make(map[string]uint64),
-			HiddenStats:   make(map[string]uint64),
-			Contract:      make(map[string]uint64),
+			ID:          idA,
+			NameOffset:  s.Offset,
+			Name:        s.Text,
+			AfterName:   afterName,
+			Age:         age,
+			AgeOffset:   ageOffset,
+			Stats:       make(map[string]uint64),
+			HiddenStats: make(map[string]uint64),
+			Contract:    make(map[string]uint64),
 		}
 
 		// Read stats
 		for i, field := range athleteStatFields {
-			v, _ := readU64(data, preOffset+(AthleteStatStartIndex+i)*8)
+			v, _ := readU64(data, afterName+(AthleteStatStartIndex+i)*8)
 			athlete.Stats[field] = v
 		}
 
 		// Read hidden stats
 		for i, field := range athleteHiddenFields {
-			v, _ := readU64(data, preOffset+(AthleteHiddenStartIndex+i)*8)
+			v, _ := readU64(data, afterName+(AthleteHiddenStartIndex+i)*8)
 			athlete.HiddenStats[field] = v
 		}
 
 		// Read contract fields
 		for i, field := range athleteContractFields {
-			v, _ := readU64(data, preOffset+(AthleteContractStartIndex+i)*8)
+			v, _ := readU64(data, afterName+(AthleteContractStartIndex+i)*8)
 			athlete.Contract[field] = v
 		}
 
 		// Read face
-		athlete.Face, _ = readU64(data, preOffset+AthleteFaceIndex*8)
+		athlete.Face, _ = readU64(data, afterName+AthleteFaceIndex*8)
 
 		athletes = append(athletes, athlete)
 	}
@@ -495,7 +558,7 @@ func exportAthletes(athletes []Athlete, path string) error {
 	defer writer.Flush()
 
 	// Build header
-	header := []string{"name_offset", "name"}
+	header := []string{"name_offset", "name", "age", "age_offset"}
 	header = append(header, athleteStatFields...)
 	header = append(header, athleteHiddenFields...)
 	header = append(header, athleteContractFields...)
@@ -507,6 +570,8 @@ func exportAthletes(athletes []Athlete, path string) error {
 		row := []string{
 			strconv.Itoa(a.NameOffset),
 			a.Name,
+			uint32OrEmpty(a.AgeOffset, a.Age),
+			intOrEmpty(a.AgeOffset),
 		}
 		for _, field := range athleteStatFields {
 			row = append(row, strconv.FormatUint(a.Stats[field], 10))
@@ -528,4 +593,11 @@ func intOrEmpty(n int) string {
 		return ""
 	}
 	return strconv.Itoa(n)
+}
+
+func uint32OrEmpty(offset int, n uint32) string {
+	if offset == 0 {
+		return ""
+	}
+	return strconv.FormatUint(uint64(n), 10)
 }

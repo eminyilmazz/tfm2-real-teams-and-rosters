@@ -2,7 +2,7 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.4.1-blue)
+![Version](https://img.shields.io/badge/version-v0.4.4.2-blue)
 ![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.4-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -12,7 +12,7 @@ This mod replaces the default TFM2 roster database with real-world data:
 
 - **🏆 120 Teams** - Real esports organizations from LCK, LPL, LEC, LCS, CBLOL, LLA, PCS, LJL, VCS, and more
 - **👤 1,197 Players** - Real pro players with their in-game names
-- **📊 Realistic Stats** - Player statistics derived from Oracle's Elixir competitive data
+- **📊 Realistic Stats** - Player statistics derived from Oracle's Elixir and Games of Legends public data
 - **🎨 Team Logos** - Embedded custom logos for major esports organizations
 
 ### Leagues Included
@@ -50,14 +50,14 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 | Team Names | ✅ Working | All 120 teams renamed |
 | Team Logos | ✅ Working | Embedded custom logo assets |
 | Player Names | ✅ Working | Real IGNs for all players |
-| Player Stats | ✅ Working | Derived from Oracle's Elixir data |
+| Player Stats | ✅ Working | Multi-year Oracle's Elixir base with Games of Legends player/team margin adjustments |
 | Position Skills | ✅ Working | Based on actual roles played |
+| Player Ages | ✅ Working | Uses exact decoded age offsets |
 
 ### ⚠️ Known Limitations
 
 | Feature | Status | Reason |
 |---------|--------|--------|
-| **Player Ages** | ❌ Not Working | Could not get this field working |
 | **Potential & Hidden Stats** | ⚠️ Partial | Some hidden fields could not be reliably modified |
 | **Coach Names** | ⚠️ Partial | Some coaches may be missing or have default names |
 | **Stadium Names** | ⚠️ Unchanged | Kept as game defaults |
@@ -70,10 +70,19 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 
 ### Data Quality Notes
 
-- **Stats are approximations**: Real competitive performance is complex. We derived stats using formulas based on KDA, CS/min, vision score, damage share, and other metrics from Oracle's Elixir.
-- **League strength calibration**: Players from stronger leagues (LCK, LPL) have slightly boosted stats to reflect competition level.
-- **Academy/Challenger players**: May have more estimated stats due to less data availability.
+- **Stats are approximations**: Real competitive performance is complex. We derived stats using formulas based on KDA, CS/min, vision score, damage share, and other metrics from Oracle's Elixir and Games of Legends.
+- **League strength calibration**: LCK/LPL/LEC/LCS and other regions use explicit strength anchors, with Games of Legends team margins for within-region team separation.
+- **Academy/Challenger players**: Division 2, minor, and regional players are capped lower than major-region starters to preserve real-world league gaps.
 - **Role proficiency**: Based on games played per position, not necessarily player preference.
+
+## Latest Release: v0.4.4.2
+
+- Corrected player ages using exact decoded age offsets.
+- Rebalanced visible player stats from 2023-2026 Oracle's Elixir data with recent-season weighting.
+- Added Games of Legends player aggregates as a capped secondary nudge.
+- Added Games of Legends team margin differentials for same-league team separation.
+- Increased the gap between major top teams, lower major teams, minor leagues, division 2, and regional leagues.
+- Packaged database SHA256: `3f7c2eddd0a5128e23617bf2ea7c3fead5a8ce4eb918281accad47fd89d8876d`.
 
 ## For Modders: Create Your Own Roster
 
@@ -116,12 +125,14 @@ go run validate.go "modded.tfm2db"
 |-------|----------|-------|
 | name | ✅ Yes | Player name |
 | last_hit, skill_avoid, etc. | ✅ Yes | Stats (0-100 typical) |
+| age | ✅ Yes | Writes only when `age_offset` is present |
 | team_id | ✅ Yes | Contract field |
 | face | ✅ Yes | Portrait index |
 
 ## Data Sources
 
-- **Player/Team Data**: [Oracle's Elixir](https://oracleselixir.com/) - 2026 early/Spring split
+- **Player/Team Data**: [Oracle's Elixir](https://oracleselixir.com/) - 2023-2026 competitive data
+- **Secondary Balance Data**: [Games of Legends](https://gol.gg/) - public player and team aggregate tables
 - **Team Logos**: Referenced from existing TFM2 custom logo format
 - **Base File Format**: Reverse-engineered from TFM2 v0.4.1
 
@@ -132,21 +143,22 @@ go run validate.go "modded.tfm2db"
 ```
 Offset  Size  Description
 0       4     Magic bytes "TFM2"
-4       1     Kind byte (1 = roster)
+4       1     Kind byte (4 = game-saved custom database, 1 = packaged roster)
 5       8     Timestamp (u64, milliseconds since epoch)
 13      8     Gzip payload length (u64)
 21      4     CRC32 of gzip payload
-25      ...   Gzip-compressed Rust bincode data
+25/3484 ...   Gzip-compressed Rust bincode data, depending on package kind
 ```
 
 ### Athlete Data Structure
 
-Each athlete has 39 u64 values before their name string:
+Each athlete stores ids before its name string, then visible stats and hidden fields after the name:
 - Index 0: Version
 - Index 1-20: Visible stats
 - Index 21-31: Hidden stats
 - Index 32-36: Contract fields
 - Index 37: Face index
+- Age is written only through the exact decoded `age_offset` exported by the unpacker.
 
 ## Disclaimer & Credits
 
@@ -174,7 +186,7 @@ This mod is unofficial and not affiliated with Team Samoyed (TFM2 developers) or
 1. **Some players may have incorrect stats** - The formula is an approximation
 2. **Academy players have less accurate data** - Fewer games to analyze
 3. **Data from early 2026** - Some teams (FeelsStrongMan Los Ratones) no longer exist, latest transfers not included
-4. **Some fields not editable** - Ages, potential, and some hidden stats could not be modified
+4. **Some fields not editable** - Some hidden stats and unknown fields are intentionally preserved for stability
 
 ## Contributing
 

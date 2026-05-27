@@ -267,16 +267,16 @@ func applyAthleteEdits(payload []byte, csvPath string) (int, error) {
 			continue
 		}
 
-		// Calculate base offset for stats (39 u64s before name)
-		preOffset := nameOffset - 39*8
-		if preOffset < 0 {
+		nameLength, ok := readU64(payload, nameOffset)
+		if !ok {
 			continue
 		}
+		afterName := nameOffset + 8 + int(nameLength)
 
 		// Apply stat edits
 		for i, field := range athleteStatFields {
 			if val, ok := getUint64Column(row, colIndex, field); ok {
-				offset := preOffset + (AthleteStatStartIndex+i)*8
+				offset := afterName + (AthleteStatStartIndex+i)*8
 				if writeU64(payload, offset, val) {
 					editCount++
 				}
@@ -286,7 +286,7 @@ func applyAthleteEdits(payload []byte, csvPath string) (int, error) {
 		// Apply hidden stat edits
 		for i, field := range athleteHiddenFields {
 			if val, ok := getUint64Column(row, colIndex, field); ok {
-				offset := preOffset + (AthleteHiddenStartIndex+i)*8
+				offset := afterName + (AthleteHiddenStartIndex+i)*8
 				if writeU64(payload, offset, val) {
 					editCount++
 				}
@@ -296,7 +296,7 @@ func applyAthleteEdits(payload []byte, csvPath string) (int, error) {
 		// Apply contract edits
 		for i, field := range athleteContractFields {
 			if val, ok := getUint64Column(row, colIndex, field); ok {
-				offset := preOffset + (AthleteContractStartIndex+i)*8
+				offset := afterName + (AthleteContractStartIndex+i)*8
 				if writeU64(payload, offset, val) {
 					editCount++
 				}
@@ -305,9 +305,19 @@ func applyAthleteEdits(payload []byte, csvPath string) (int, error) {
 
 		// Apply face edit
 		if face, ok := getUint64Column(row, colIndex, "face"); ok {
-			offset := preOffset + AthleteFaceIndex*8
+			offset := afterName + AthleteFaceIndex*8
 			if writeU64(payload, offset, face) {
 				editCount++
+			}
+		}
+
+		// Apply age edit at the exact offset exported by unpack.go.
+		if age, ok := getUint64Column(row, colIndex, "age"); ok {
+			ageOffset, hasOffset := getIntColumn(row, colIndex, "age_offset")
+			if hasOffset && ageOffset > 0 {
+				if writeU32(payload, ageOffset, uint32(age)) {
+					editCount++
+				}
 			}
 		}
 
@@ -362,6 +372,13 @@ func getStringColumn(row []string, colIndex map[string]int, name string) (string
 	return row[idx], true
 }
 
+func readU64(data []byte, offset int) (uint64, bool) {
+	if offset < 0 || offset+8 > len(data) {
+		return 0, false
+	}
+	return binary.LittleEndian.Uint64(data[offset:]), true
+}
+
 func editLPString(data []byte, offset int, newText string) bool {
 	if offset < 0 || offset+8 > len(data) {
 		return false
@@ -382,6 +399,9 @@ func editLPString(data []byte, offset int, newText string) bool {
 	}
 
 	// Write new text
+	if string(data[offset+8:oldEnd]) == newText {
+		return false
+	}
 	copy(data[offset+8:oldEnd], newBytes)
 	return true
 }
@@ -390,6 +410,22 @@ func writeU64(data []byte, offset int, value uint64) bool {
 	if offset < 0 || offset+8 > len(data) {
 		return false
 	}
+	oldValue := binary.LittleEndian.Uint64(data[offset:])
+	if oldValue == value {
+		return false
+	}
 	binary.LittleEndian.PutUint64(data[offset:], value)
+	return true
+}
+
+func writeU32(data []byte, offset int, value uint32) bool {
+	if offset <= 0 || offset+4 > len(data) {
+		return false
+	}
+	oldValue := binary.LittleEndian.Uint32(data[offset:])
+	if oldValue == value {
+		return false
+	}
+	binary.LittleEndian.PutUint32(data[offset:], value)
 	return true
 }
