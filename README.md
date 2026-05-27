@@ -2,8 +2,8 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.4-blue)
-![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.1-green)
+![Version](https://img.shields.io/badge/version-v0.4.4.1-blue)
+![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.4-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ## What This Mod Does
