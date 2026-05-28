@@ -2,7 +2,7 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.4.4-blue)
+![Version](https://img.shields.io/badge/version-v0.4.4.3-blue)
 ![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.4-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -76,14 +76,15 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 - **Academy/Challenger players**: Division 2, minor, and regional players are capped lower than major-region starters to preserve real-world league gaps.
 - **Role proficiency**: Based on games played per position, not necessarily player preference.
 
-## Latest Release: v0.4.4.4
+## Latest Release: v0.4.4.3
 
-- Hotfixed EU roster ownership after the corrected team-slot manifest was applied on top of an older athlete pass.
-- Regenerated athlete assignments from the current manifest so GIANTX, Fnatic, SK Gaming, Team Heretics, and Los Ratones use their intended source rosters.
-- Preserved the v0.4.4.3 direct-import wrapper, team rows, stadium defaults, and all 120 embedded custom logo blocks.
-- Verified all generated starters are present under their matching exported team slots.
-- Validated the packaged file with `tools/validate.go`; header remains direct-import format (`kind=1`, gzip offset `25`).
-- Packaged database SHA256: `0f3820793eea307dfd304474d495afffaafd6ddc86a7fede14e78caf746258da`.
+- Repacked the current verified logo database as a direct-import `.tfm2db` package (`kind=1`, gzip offset `25`).
+- Preserved the validated v0.4.4.2 roster, age, contract, and balance data.
+- Verified 120 team logo references and 120 embedded custom logo blocks after packaging.
+- Fixed the SillySilly Gaming logo path through the import package using `custom:custom_team_logo/79`.
+- Left stadium names unchanged after rolling back the experimental venue pass.
+- Validated the packaged file with `tools/validate.go` and a decompressed-core comparison against the known-good logo candidate.
+- Packaged database SHA256: `fde02f2821d47be645316f3e8335d388b068070e0351f5a4f3939b1292e28cb4`.
 
 ## For Modders: Create Your Own Roster
 
