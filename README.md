@@ -2,7 +2,7 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.4.3-blue)
+![Version](https://img.shields.io/badge/version-v0.4.4.4-blue)
 ![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.4-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -76,15 +76,16 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 - **Academy/Challenger players**: Division 2, minor, and regional players are capped lower than major-region starters to preserve real-world league gaps.
 - **Role proficiency**: Based on games played per position, not necessarily player preference.
 
-## Latest Release: v0.4.4.3
+## Latest Release: v0.4.4.4
 
-- Repacked the current verified logo database as a direct-import `.tfm2db` package (`kind=1`, gzip offset `25`).
-- Preserved the validated v0.4.4.2 roster, age, contract, and balance data.
-- Verified 120 team logo references and 120 embedded custom logo blocks after packaging.
-- Fixed the SillySilly Gaming logo path through the import package using `custom:custom_team_logo/79`.
-- Left stadium names unchanged after rolling back the experimental venue pass.
-- Validated the packaged file with `tools/validate.go` and a decompressed-core comparison against the known-good logo candidate.
-- Packaged database SHA256: `fde02f2821d47be645316f3e8335d388b068070e0351f5a4f3939b1292e28cb4`.
+- Fixed roster display mapping issues found after the v0.4.4.3 import package.
+- Corrected the remaining contiguous mismatch block around slots `48-59`, including Estral, INTZ, and JP Div 1 teams.
+- Preserved the confirmed CN2/EU2/NA2/SA2 roster display fixes.
+- Fixed NRG's missing/default logo by assigning it to `custom:custom_team_logo/86`.
+- Replaced NRG's wide logo payload with a square `250x250` embedded PNG.
+- Added GitHub Actions validation on PRs, pushes, version tags, published releases, and manual workflow runs.
+- Added strict database guardrails for package kind, gzip offset, CRC, team count, custom logo blocks, logo refs, and `database_pack.info` protection.
+- Packaged database SHA256: `f4aa4ce5ea37c260a9d76d4850dacacba0bc41ffd845ceb3e23236da778cc29b`.
 
 ## For Modders: Create Your Own Roster
 
