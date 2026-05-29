@@ -2,21 +2,20 @@ name: Validate TFM2 Database
 
 on:
   pull_request:
-    branches:
-      - main
-    paths:
-      - "tfm2_teams_and_rosters.tfm2db"
-      - "database_pack.info"
-      - "tools/**"
-      - ".github/workflows/validate.yml"
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
   push:
     branches:
       - main
-    paths:
-      - "tfm2_teams_and_rosters.tfm2db"
-      - "database_pack.info"
-      - "tools/**"
-      - ".github/workflows/validate.yml"
+    tags:
+      - "v*"
+  release:
+    types:
+      - published
+  workflow_dispatch:
 
 jobs:
   validate:
