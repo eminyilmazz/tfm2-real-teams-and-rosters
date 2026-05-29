@@ -197,7 +197,10 @@ Found an issue? Have better data? Pull requests welcome!
 1. Fork this repository
 2. Edit the source CSVs or improve the tools
 3. Test your changes in-game
-4. Submit a PR with description of changes
+4. Run `./tools/preflight.ps1`
+5. Submit a PR with description of changes
+
+See [VALIDATION.md](VALIDATION.md) for the database, logo, and release guardrails that CI enforces.
 
 ## License
 

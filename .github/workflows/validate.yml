@@ -1,0 +1,46 @@
+name: Validate TFM2 Database
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "tfm2_teams_and_rosters.tfm2db"
+      - "database_pack.info"
+      - "tools/**"
+      - ".github/workflows/validate.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "tfm2_teams_and_rosters.tfm2db"
+      - "database_pack.info"
+      - "tools/**"
+      - ".github/workflows/validate.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21.x"
+
+      - name: Run database preflight
+        shell: pwsh
+        run: |
+          $baseRef = ""
+          if ("${{ github.event_name }}" -eq "pull_request") {
+            $baseRef = "${{ github.event.pull_request.base.sha }}"
+          } elseif ("${{ github.event.before }}" -and "${{ github.event.before }}" -ne "0000000000000000000000000000000000000000") {
+            $baseRef = "${{ github.event.before }}"
+          }
+
+          ./tools/preflight.ps1 -BaseRef $baseRef
