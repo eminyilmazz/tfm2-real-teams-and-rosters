@@ -2,8 +2,8 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.4.4-blue)
-![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.4-green)
+![Version](https://img.shields.io/badge/version-v0.4.6.1-blue)
+![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.6-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ## What This Mod Does
@@ -60,14 +60,14 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 | Feature | Status | Reason |
 |---------|--------|--------|
 | **Potential & Hidden Stats** | ⚠️ Partial | Some hidden fields could not be reliably modified |
-| **Coach Names** | ⚠️ Partial | Some coaches may be missing or have default names |
+| **Coach Names** | ⚠️ Partial | 89 sourced or manually confirmed head coaches are included; unresolved rows remain default |
 | **Stadium Names** | ⚠️ Unchanged | Kept as game defaults |
 | **Transfer History** | ❌ Not Included | Would require more research |
 
 ### ⚠️ Data Freshness
 
-- **Data is from early 2026** - May not include latest transfers and roster changes
-- New recruits from Summer split may be missing
+- **Data is from 2026 with a targeted transfer update** - Some late Summer split changes may still be missing
+- Player origins/communication regions were corrected for the latest manually reviewed transferred players
 
 ### Data Quality Notes
 
@@ -76,16 +76,15 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 - **Academy/Challenger players**: Division 2, minor, and regional players are capped lower than major-region starters to preserve real-world league gaps.
 - **Role proficiency**: Based on games played per position, not necessarily player preference.
 
-## Latest Release: v0.4.4.4
+## Latest Release: v0.4.6.1
 
-- Fixed roster display mapping issues found after the v0.4.4.3 import package.
-- Corrected the remaining contiguous mismatch block around slots `48-59`, including Estral, INTZ, and JP Div 1 teams.
-- Preserved the confirmed CN2/EU2/NA2/SA2 roster display fixes.
-- Fixed NRG's missing/default logo by assigning it to `custom:custom_team_logo/86`.
-- Replaced NRG's wide logo payload with a square `250x250` embedded PNG.
-- Added GitHub Actions validation on PRs, pushes, version tags, published releases, and manual workflow runs.
-- Added strict database guardrails for package kind, gzip offset, CRC, team count, custom logo blocks, logo refs, and `database_pack.info` protection.
-- Packaged database SHA256: `f4aa4ce5ea37c260a9d76d4850dacacba0bc41ffd845ceb3e23236da778cc29b`.
+- Updated the packaged database for Teamfight Manager 2 `0.4.6` compatibility.
+- Added player origin/communication-region fixes for transferred major-league players.
+- Rebalanced player and league strength with the latest Oracle's Elixir and Games of Legends data pass.
+- Improved real-world gaps between major top teams, lower major teams, minor leagues, division 2 teams, and regional leagues.
+- Added sourced real-life staff head coaches for 89 teams, including Dplus KIA `cvMax` and Los Ratones `YamatoCannon`.
+- Preserved the confirmed roster display corrections, NRG square logo fix, and strict release validation guardrails.
+- Packaged database SHA256: `6ced3e64363587eb3845dbc727c43b4f1014dd8db4fa92603668f5aa7ab70bec`.
 
 ## For Modders: Create Your Own Roster
 
