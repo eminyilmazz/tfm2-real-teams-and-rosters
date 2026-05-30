@@ -2,7 +2,7 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.6.1-blue)
+![Version](https://img.shields.io/badge/version-v0.4.6.2-blue)
 ![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.6-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -11,7 +11,7 @@ A custom roster mod for **Teamfight Manager 2** featuring real League of Legends
 This mod replaces the default TFM2 roster database with real-world data:
 
 - **🏆 120 Teams** - Real esports organizations from LCK, LPL, LEC, LCS, CBLOL, LLA, PCS, LJL, VCS, and more
-- **👤 1,197 Players** - Real pro players with their in-game names
+- **👤 910 Active Player Records** - Real pro players plus load-tested limited extras
 - **📊 Realistic Stats** - Player statistics derived from Oracle's Elixir and Games of Legends public data
 - **🎨 Team Logos** - Embedded custom logos for major esports organizations
 
@@ -76,15 +76,15 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 - **Academy/Challenger players**: Division 2, minor, and regional players are capped lower than major-region starters to preserve real-world league gaps.
 - **Role proficiency**: Based on games played per position, not necessarily player preference.
 
-## Latest Release: v0.4.6.1
+## Latest Release: v0.4.6.2
 
-- Updated the packaged database for Teamfight Manager 2 `0.4.6` compatibility.
-- Added player origin/communication-region fixes for transferred major-league players.
-- Rebalanced player and league strength with the latest Oracle's Elixir and Games of Legends data pass.
-- Improved real-world gaps between major top teams, lower major teams, minor leagues, division 2 teams, and regional leagues.
-- Added sourced real-life staff head coaches for 89 teams, including Dplus KIA `cvMax` and Los Ratones `YamatoCannon`.
-- Preserved the confirmed roster display corrections, NRG square logo fix, and strict release validation guardrails.
-- Packaged database SHA256: `6ced3e64363587eb3845dbc727c43b4f1014dd8db4fa92603668f5aa7ab70bec`.
+- Updated player language/origin data using the decoded dynamic language-vector layout.
+- Moved LCP/APAC teams into the corrected league layout with matching players and logos.
+- Restored all 120 teams to custom logo references, including Deep Cross Gaming and VARREL YOUTH.
+- Applied load-tested random extra-player limiting while preserving game-import stability.
+- Restored BNK FEARX to seven visible players with `REMIND` and `POP` as the two generated extras.
+- Preserved the sourced head-coach pass, balance updates, NRG square logo fix, and strict release guardrails.
+- Packaged database SHA256: `3c153033167e0fc02bef0aea0d5332835ca5c643e8a51f3015b166c8674f5d68`.
 
 ## For Modders: Create Your Own Roster
 

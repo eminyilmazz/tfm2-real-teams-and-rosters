@@ -21,11 +21,11 @@ The same preflight runs in GitHub Actions on pull requests and pushes that touch
   - `Deep Cross Gaming`
   - `VARREL YOUTH`
 - At least `1100` athlete-like rows are found.
-- `database_pack.info` must not change.
+- `database_pack.info` may only change non-description metadata fields, such as `version`.
 
 ## Release Rules
 
-- Do not edit `database_pack.info`; Steam behaves unpredictably when that file changes.
+- Do not edit the `description` field in `database_pack.info`; Steam Workshop descriptions are managed outside database packaging.
 - Do not create a GitHub release until the import file has been tested in-game.
 - Keep release commits small and explain whether the edit is names-only, logo-ref-only, exact-length logo payload replacement, or broader data generation.
 
