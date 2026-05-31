@@ -2,7 +2,7 @@
 
 A custom roster mod for **Teamfight Manager 2** featuring real League of Legends esports players, teams, and logos from the 2026 competitive season.
 
-![Version](https://img.shields.io/badge/version-v0.4.6.2-blue)
+![Version](https://img.shields.io/badge/version-v0.4.6.3-blue)
 ![TFM2 Version](https://img.shields.io/badge/TFM2-v0.4.6-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -76,15 +76,13 @@ C:\Users\<YourName>\AppData\Roaming\TeamSamoyed\TeamfightManager2\data\custom_da
 - **Academy/Challenger players**: Division 2, minor, and regional players are capped lower than major-region starters to preserve real-world league gaps.
 - **Role proficiency**: Based on games played per position, not necessarily player preference.
 
-## Latest Release: v0.4.6.2
+## Latest Release: v0.4.6.3
 
-- Updated player language/origin data using the decoded dynamic language-vector layout.
-- Moved LCP/APAC teams into the corrected league layout with matching players and logos.
-- Restored all 120 teams to custom logo references, including Deep Cross Gaming and VARREL YOUTH.
-- Applied load-tested random extra-player limiting while preserving game-import stability.
-- Restored BNK FEARX to seven visible players with `REMIND` and `POP` as the two generated extras.
-- Preserved the sourced head-coach pass, balance updates, NRG square logo fix, and strict release guardrails.
-- Packaged database SHA256: `3c153033167e0fc02bef0aea0d5332835ca5c643e8a51f3015b166c8674f5d68`.
+- Fixed generated/random player language vectors so limited extra players now speak the region of the team slot they play in.
+- Updated 124 generated-player language vectors while leaving real/current-core player language vectors unchanged.
+- Preserved the load-tested random extra-player limiting, LCP/APAC layout, custom-logo fixes, sourced head coaches, balance updates, and strict release guardrails from `v0.4.6.2`.
+- Included the new player-photo workshop thumbnail and local attribution notes.
+- Packaged database SHA256: `0cafe658d6e7cd624c1bc29c3d1cd40987ccdeb585e3f6b9e08d1cdfd4a202bb`.
 
 ## For Modders: Create Your Own Roster
 
